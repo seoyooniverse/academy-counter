@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학원 입시 성과 카운터</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/pretendard/1.3.6/static/pretendard.css" rel="stylesheet">
+  <style>
+    /* 모든 스타일을 명확한 클래스 네임으로 제한해서 다른 요소에 영향을 주지 않도록 함 */
+    .academy-counter-wrap * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+    }
+    
+    .academy-counter-section {
+      background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%);
+      color: white;
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+    
+    .academy-counter-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(30, 64, 175, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+      opacity: 0.6;
+      z-index: 0;
+    }
+    
+    .academy-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .academy-section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 4rem;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+    }
+    
+    .academy-yellow-text {
+      display: block;
+      font-size: 1.5rem;
+      color: #FFD700;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .academy-counter-container {
+      display: flex;
+      justify-content: center;
+      gap: 5rem;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .academy-counter-item {
+      text-align: center;
+      position: relative;
+      flex: 1;
+    }
+    
+    .academy-counter-item::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -2.5rem;
+      width: 1px;
+      height: 70px;
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%);
+    }
+    
+    .academy-counter-item:last-child::after {
+      display: none;
+    }
+    
+    .academy-counter-value {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+    }
+    
+    .academy-number {
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    
+    .academy-counter-suffix {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-left: 0.25rem;
+      color: #ffffff;
+    }
+    
+    .academy-counter-title {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+    
+    .academy-highlight {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .academy-highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0.6rem;
+      left: 0;
+      width: 100%;
+      height: 0.75rem;
+      background-color: rgba(255, 217, 0, 0.3);
+      z-index: -1;
+    }
+    
+    .academy-plus {
+      font-size: 3rem;
+      font-weight: 700;
+      vertical-align: top;
+      color: #ffc107;
+      margin-left: 0.25rem;
+    }
+    
+    @media (max-width: 768px) {
+      .academy-counter-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 3rem;
+      }
+      
+      .academy-counter-item {
+        width: 100%;
+        max-width: 200px;
+      }
+      
+      .academy-counter-item::after {
+        right: 0;
+        top: auto;
+        bottom: -1.5rem;
+        width: 50px;
+        height: 1px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .academy-section-title {
+        font-size: 2rem;
+      }
+      
+      .academy-number {
+        font-size: 4rem;
+      }
+      
+      .academy-counter-suffix {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="academy-counter-wrap">
+    <section class="academy-counter-section">
+      <div class="academy-container">
+        <h2 class="academy-section-title">
+          <span class="academy-yellow-text">오직 특별전형으로만!</span>
+          <span class="academy-highlight">압도적인</span> 입시 성과
+        </h2>
+        
+        <div class="academy-counter-container">
+          <div class="academy-counter-item">
+            <div class="academy-counter-value">
+              <span id="academy-counter1" class="academy-number">0</span>
+              <span class="academy-counter-suffix">%</span>
+            </div>
+            <div class="academy-counter-title">합격률</div>
+          </div>
+          
+          <div class="academy-counter-item">
+            <div class="academy-counter-value">
+              <span id="academy-counter2" class="academy-number">0</span>
+              <span class="academy-plus">+</span>
+            </div>
+            <div class="academy-counter-title">누적 합격자</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // 카운터 애니메이션 함수
+    function animateCounter(element, target, duration, isPlus = false) {
+      let start = 0;
+      const startTime = performance.now();
+      
+      function updateCounter(currentTime) {
+        const elapsedTime = currentTime - startTime;
+        
+        if (elapsedTime > duration) {
+          element.textContent = target.toLocaleString();
+          return;
+        }
+        
+        const progress = elapsedTime / duration;
+        const currentValue = Math.floor(target * progress);
+        
+        element.textContent = currentValue.toLocaleString();
+        
+        requestAnimationFrame(updateCounter);
+      }
+      
+      requestAnimationFrame(updateCounter);
+    }
+    
+    // 요소가 화면에 보이는지 감지하는 함수
+    function handleIntersection(entries, observer) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // 카운터 요소
+          const counter1 = document.getElementById('academy-counter1');
+          const counter2 = document.getElementById('academy-counter2');
+          
+          // 각 카운터 애니메이션 시작
+          animateCounter(counter1, 100, 2000);
+          animateCounter(counter2, 500, 2000, true);
+          
+          // 한 번만 실행되도록 관찰 중단
+          observer.disconnect();
+        }
+      });
+    }
+    
+    // 페이지 로드 완료 후 실행
+    document.addEventListener('DOMContentLoaded', function() {
+      // IntersectionObserver 설정
+      const counterSection = document.querySelector('.academy-counter-section');
+      const observer = new IntersectionObserver(handleIntersection, {
+        threshold: 0.1
+      });
+      
+      // 섹션 관찰 시작
+      if (counterSection) {
+        observer.observe(counterSection);
+      }
+    });
+  </script>
+</body>
+</html>
