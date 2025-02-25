@@ -2,29 +2,22 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>학원 입시 성과 카운터</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/pretendard/1.3.6/static/pretendard.css" rel="stylesheet">
   <style>
-body {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
+    /* CSS를 모두 범위(scoped)로 제한해서 다른 요소에 영향을 주지 않도록 함 */
+    .academy-counter-wrap {
       width: 100%;
+      max-width: 100%;
+      overflow: hidden; /* 가로 스크롤바 방지 */
     }
     
-    /* 모든 스타일을 명확한 클래스 네임으로 제한해서 다른 요소에 영향을 주지 않도록 함 */
     .academy-counter-wrap * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Pretendard', sans-serif;
-    }
-    
-    .academy-counter-wrap {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden;
     }
     
     .academy-counter-section {
@@ -34,7 +27,6 @@ body {
       position: relative;
       overflow: hidden;
       width: 100%;
-      max-width: 100%;
     }
     
     .academy-counter-section::before {
@@ -116,6 +108,7 @@ body {
       background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.02em;
     }
@@ -160,11 +153,14 @@ body {
     }
     
     @media (max-width: 768px) {
+      .academy-counter-section {
+        padding: 4rem 1rem; /* 모바일에서 패딩 감소 */
+      }
+      
       .academy-counter-container {
         flex-direction: column;
         align-items: center;
         gap: 3rem;
-        width: 100%;
       }
       
       .academy-counter-item {
@@ -192,10 +188,6 @@ body {
       
       .academy-counter-suffix {
         font-size: 2rem;
-      }
-      
-      .academy-counter-section {
-        padding: 4rem 1rem;
       }
     }
   </style>
@@ -233,61 +225,73 @@ body {
   </div>
 
   <script>
-    // 카운터 애니메이션 함수
-    function animateCounter(element, target, duration, isPlus = false) {
-      let start = 0;
-      const startTime = performance.now();
-      
-      function updateCounter(currentTime) {
-        const elapsedTime = currentTime - startTime;
+    // IIFE를 사용하여 변수 범위를 제한함
+    (function() {
+      // 카운터 애니메이션 함수
+      function animateCounter(element, target, duration, isPlus = false) {
+        let start = 0;
+        const startTime = performance.now();
         
-        if (elapsedTime > duration) {
-          element.textContent = target.toLocaleString();
-          return;
+        function updateCounter(currentTime) {
+          const elapsedTime = currentTime - startTime;
+          
+          if (elapsedTime > duration) {
+            element.textContent = target.toLocaleString();
+            return;
+          }
+          
+          const progress = elapsedTime / duration;
+          const currentValue = Math.floor(target * progress);
+          
+          element.textContent = currentValue.toLocaleString();
+          
+          requestAnimationFrame(updateCounter);
         }
-        
-        const progress = elapsedTime / duration;
-        const currentValue = Math.floor(target * progress);
-        
-        element.textContent = currentValue.toLocaleString();
         
         requestAnimationFrame(updateCounter);
       }
       
-      requestAnimationFrame(updateCounter);
-    }
-    
-    // 요소가 화면에 보이는지 감지하는 함수
-    function handleIntersection(entries, observer) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // 카운터 요소
-          const counter1 = document.getElementById('academy-counter1');
-          const counter2 = document.getElementById('academy-counter2');
-          
-          // 각 카운터 애니메이션 시작
-          animateCounter(counter1, 100, 2000);
-          animateCounter(counter2, 500, 2000, true);
-          
-          // 한 번만 실행되도록 관찰 중단
-          observer.disconnect();
-        }
-      });
-    }
-    
-    // 페이지 로드 완료 후 실행
-    document.addEventListener('DOMContentLoaded', function() {
-      // IntersectionObserver 설정
-      const counterSection = document.querySelector('.academy-counter-section');
-      const observer = new IntersectionObserver(handleIntersection, {
-        threshold: 0.1
-      });
-      
-      // 섹션 관찰 시작
-      if (counterSection) {
-        observer.observe(counterSection);
+      // 요소가 화면에 보이는지 감지하는 함수
+      function handleIntersection(entries, observer) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // 카운터 요소
+            const counter1 = document.getElementById('academy-counter1');
+            const counter2 = document.getElementById('academy-counter2');
+            
+            // 각 카운터 애니메이션 시작
+            if (counter1 && counter2) {
+              animateCounter(counter1, 100, 2000);
+              animateCounter(counter2, 500, 2000, true);
+            }
+            
+            // 한 번만 실행되도록 관찰 중단
+            observer.disconnect();
+          }
+        });
       }
-    });
+      
+      // 페이지 로드 완료 후 실행
+      function init() {
+        // IntersectionObserver 설정
+        const counterSection = document.querySelector('.academy-counter-section');
+        if (counterSection) {
+          const observer = new IntersectionObserver(handleIntersection, {
+            threshold: 0.1
+          });
+          
+          // 섹션 관찰 시작
+          observer.observe(counterSection);
+        }
+      }
+      
+      // 이미 로드된 경우 바로 실행, 아니면 이벤트 리스너 등록
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(init, 1);
+      } else {
+        document.addEventListener('DOMContentLoaded', init);
+      }
+    })();
   </script>
 </body>
 </html>
